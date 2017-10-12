@@ -7,16 +7,16 @@ import sys, json, urllib, time
 def readPage(url, start = 1):
 	global courseList
 	time.sleep(1) # prevent DDOS
-	f = urlopen(url + str(start)).read()
+	f = urlopen(url + str(start)).read().decode('utf-8')
 	html = pq(f)
 	courses = html("tr.clickable-row .title a")
 	for c in courses:
 		cobj = pq(c)
-		course = {"link": cobj.attr["href"], "title": cobj.text()}
+		course = {"link": cobj.attr["href"], "title": cobj.html()}
 		courseList += [course]
-	if url[-9:-1] == "semester" and start == 7:
+	if url[-9:-1] == "semester" and start >= 7:
 		return
-	if url[-5:-1] == "flow" and start == 12:
+	if url[-5:-1] == "flow" and start >= 12:
 		return
 	readPage(url, start + 1)
 
@@ -27,4 +27,4 @@ url = "https://www.ece.ntua.gr/gr/undergraduate/courses/flow/"
 readPage(url)
 
 with open("output.json", "w", encoding="utf8") as fout:
-	fout.write(json.dumps(courseList))
+	json.dump(courseList, fout, ensure_ascii=False)
