@@ -1,7 +1,5 @@
 from pyquery import PyQuery as pq
 from urllib.request import urlopen
-from datetime import datetime
-from pprint import pprint
 import sys, json, urllib, time
 
 def readPage(url, start = 1):
